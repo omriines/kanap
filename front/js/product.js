@@ -19,6 +19,37 @@ fetch("http://localhost:3000/api/products/"+id)
    
     console.log(product);
     document.querySelector(".item__img").innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+    document.querySelector("#title").innerHTML = product.name;
+    document.querySelector("#price").innerHTML = product.price;
+    document.querySelector("#description").innerHTML = product.description;
+    let colors = product.colors;
+    for(var i = 0; i < colors.length; i++){
+      document.querySelector("#colors").innerHTML += `<option value="${colors[i]}">${colors[i]}</option>`;
+    }
+   //Controler la quantité
+   function  quantityControl(quant){
+    console.log(quant); 
+    
+   if (quant < 1 ||  quant > 100) {
+     return false;
+
+   }  
+   else {
+     return true;
+   }
+  }
+   const qte = document.getElementById("quantity");
+    // On récupère l'élément sur lequel on veut détecter le clic
+    qte.addEventListener('change', function() { 
+      let quantity = qte.value; 
+     
+     if (!quantityControl(quantity)){
+      alert("La quantité doit être entre 1 et 100");
+      qte.focus();
+     };
+                   
+    });
+ 
 
   })
   .catch(function(err) {
