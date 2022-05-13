@@ -26,8 +26,9 @@ fetch("http://localhost:3000/api/products/"+id)
     for(var i = 0; i < colors.length; i++){
       document.querySelector("#colors").innerHTML += `<option value="${colors[i]}">${colors[i]}</option>`;
     }
+    
    //Controler la quantité
-   function  quantityControl(quant){
+    const  quantityControl = (quant)=>{
     console.log(quant); 
     
    if (quant < 1 ||  quant > 100) {
@@ -38,19 +39,72 @@ fetch("http://localhost:3000/api/products/"+id)
      return true;
    }
   }
-   const qte = document.getElementById("quantity");
+  
     // On récupère l'élément sur lequel on veut détecter le clic
-    qte.addEventListener('change', function() { 
-      let quantity = qte.value; 
+  
+    
+   
+    
+   const btn = document.getElementById("addToCart");
+   btn.addEventListener('click',function(){
+     // Vérifier la quantité entre 1 et 100
+     const qte = document.getElementById("quantity");
+     let quantity = qte.value; 
      
      if (!quantityControl(quantity)){
       alert("La quantité doit être entre 1 et 100");
       qte.focus();
      };
-                   
-    });
- 
+     // Stocker un produit dans localstorage
+    let liste, color;
+    liste = document.getElementById("colors");
+    color = liste.options[liste.selectedIndex].text;
+    // si localStorage est rempli
+     if (localStorage.length !== 0) {
+       let i = 0;
+       let exist = false;
+      console.log("localStorage.length:" + localStorage.length);
 
+       while (i < localStorage.length) {
+        let obj = localStorage.getItem(i);
+        let objPrd = JSON.parse(obj);
+        
+        if (objPrd.id == id && objPrd.color == color){
+          let productsJson = {
+            id: id,
+            quantity: parseInt(objPrd.quantity) + parseInt(qte.value),
+            color: color,
+          };
+          localStorage.setItem(i, JSON.stringify(productsJson));
+          exist = true;
+          break;
+        }
+        i++
+      }
+      // si le produit n'existe pas dans localStorage on l'ajoute
+      if (exist == false){
+        i = localStorage.length;
+        let productsJson = {
+          id: id,
+          quantity: qte.value,
+          color: color,
+        };
+        localStorage.setItem(i, JSON.stringify(productsJson));
+    
+      }
+      
+    
+     } 
+     // si localStorage est vide on ajoute le premier ligne
+     else {
+       let productsJson = {
+         id: id,
+         quantity: qte.value,
+         color: color,
+       };
+       localStorage.setItem(0, JSON.stringify(productsJson));
+     }
+    });
   })
   .catch(function(err) {
     // Une erreur est survenue
@@ -58,5 +112,3 @@ fetch("http://localhost:3000/api/products/"+id)
     alert("Une erreur est survenue veuillez contcater l'administrateur du site!");
   });
 
-  // se renseigner sur les listener 
-  // coder une fonction qui controle la quantité ( entre 0 et 100 )
