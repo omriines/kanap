@@ -129,7 +129,7 @@ fetch("http://localhost:3000/api/products/"+id)
       } 
       } 
     }
-    });
+    document.location.href="../html/cart.html"});
   })
   .catch(function(err) {
     // Une erreur est survenue
