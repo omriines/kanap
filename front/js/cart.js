@@ -140,4 +140,36 @@ function getLocalSorage(){
             }
         }
     }
-     
+    function validText(input,content,regex) {
+        let textRegexp = new RegExp (regex);
+        //Vérifier le contenu de champ
+        let testText = textRegexp.test(input.value);
+        let msg = input.nextElementSibling;
+
+        if (testText){
+            msg.innerHTML = content+" "+"Valide";
+        }
+        else {
+            msg.innerHTML = content+" "+"Non Valide";
+        }
+
+    }
+
+     let form = document.querySelector('.cart__order__form');
+     form.firstName.addEventListener('change', function () {
+         validText(this,'Prénom','^[A-Z][A-Za-z\é\è\ê\-]+$');
+     });
+     form.lastName.addEventListener('change', function () {
+        validText(this,'Nom','^[A-Z][A-Za-z\é\è\ê\-]+$');
+    });
+    form.city.addEventListener('change', function () {
+        validText(this,'Ville','^[A-Z][A-Za-z\é\è\ê\-]+$');
+    });
+    form.address.addEventListener('change', function () {
+        validText(this,'Adresse','[a-zA-Z0-9,.-]+$');
+    });
+    form.email.addEventListener('change', function () {
+        validText(this,'Email','^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}[.][a-zA-Z]{2,3}$');
+    });
+
+    
