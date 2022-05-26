@@ -3,7 +3,7 @@ function getLocalSorage(){
     return JSON.parse(localStorage.getItem("panier"));
     else return [];
   }
-
+let products =[];
   loadPage();
 
   function loadPage(){
@@ -15,7 +15,8 @@ function getLocalSorage(){
     let totalPrice =0;
     let totalQte = 0;
     for(let i in tableauLocalStorage){
-   
+   // Remplir le tableau products
+   products.push(tableauLocalStorage[i].id);
     fetch("http://localhost:3000/api/products/"+tableauLocalStorage[i].id)
        .then(function(res) {
          
@@ -171,5 +172,43 @@ function getLocalSorage(){
     form.email.addEventListener('change', function () {
         validText(this,'Email','^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}[.][a-zA-Z]{2,3}$');
     });
-
-    
+    console.log(products);
+    const btnCommander = document.getElementById("order");
+    btnCommander.addEventListener('click',function(){
+        console.log('click');
+        let contact = {
+      
+          "firstName":document.getElementById('firstName').value,
+          "lastName":document.getElementById('lastName').value,
+          "address":document.getElementById('address').value,
+          "city":document.getElementById('city').value,
+          "email":document.getElementById('email').value
+          
+      }
+      console.log("contact:"+document.getElementById('firstName').value);
+     console.log(contact);
+      
+      //  
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json', 
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({contact: contact,products:products})
+   
+  })
+  .then(function(res) {
+    if (res.ok) {
+      return res.json();
+    }
+  })
+  .then(function(value) {
+  let orderID=value.orderId;
+  document.location.href="../html/confirmation.html?id="+orderID;
+  })
+  .catch(function(err) {
+    // Une erreur est survenue
+    console.log(err);
+    });
+  });
