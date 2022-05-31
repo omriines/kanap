@@ -25,15 +25,6 @@ fetch("http://localhost:3000/api/products")
         newP.innerHTML=product.description;
         newArticle.appendChild(newP);
         items.append(newA);
-/*
-        let newA = `  <a href="./product.html?id=${product._id}">
-        <article>
-          <img src="${product.imageUrl}" alt="${product.altTxt}">
-          <h3 class="productName">${product.name}</h3>
-          <p class="productDescription"> ${product.description} </p>
-        </article>
-      </a> `;
-        items.innerHTML+= newA;*/
         console.log(newA);
     }
   })

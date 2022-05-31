@@ -23,7 +23,7 @@
    }
   }
 
-     //Controler la quantité
+     //Controler la couleur
      function colorControl(couleur){
       console.log(couleur); 
       
@@ -128,8 +128,9 @@ fetch("http://localhost:3000/api/products/"+id)
         setLocalStorage(tableauLocalStorage);
       } 
       } 
+      document.location.href="../html/cart.html";
     }
-    document.location.href="../html/cart.html"});
+    });
   })
   .catch(function(err) {
     // Une erreur est survenue
