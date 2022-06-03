@@ -28,8 +28,7 @@ function loadPage() {
         })
         .then(function (product) {
 
-          let newArticle = `<article class="cart__item" data-id="${tableauLocalStorage[i].id}" data-color="${tableauLocalStorage[i].color}"
-          data-price="${product.price}" data-quantity="${tableauLocalStorage[i].quantity}">
+          let newArticle = `<article class="cart__item" data-id="${tableauLocalStorage[i].id}" data-color="${tableauLocalStorage[i].color}">
      <div class="cart__item__img">
      
        <img src="${product.imageUrl}" alt="${product.altTxt}">
@@ -68,18 +67,18 @@ function loadPage() {
   }
 
 }
- //Controler la quantité
- function quantityControl(quantite){
+//Controler la quantité
+function quantityControl(quantite) {
   let quant = parseInt(quantite);
-  console.log(quant); 
- 
- if (quant < 1 ||  quant > 100) {
-  return false;
+  console.log(quant);
 
- }  
- else {
-   return true;
- }
+  if (quant < 1 || quant > 100) {
+    return false;
+
+  }
+  else {
+    return true;
+  }
 }
 
 
@@ -94,7 +93,7 @@ function addListenerForDelete(tableauLocalStorage) {
       event.preventDefault();
       // referencer le parent du bouton delete pour pouvoir lire les dataset
       const closest = element.closest(".cart__item");
-   //   console.log(closest);
+      //   console.log(closest);
 
       // utiliser les dataset pour supprimer l'element du tableau localStorage 
       let id = closest.dataset.id;
@@ -102,7 +101,7 @@ function addListenerForDelete(tableauLocalStorage) {
 
       // Supprimer et Mettre à jour le localStorage
       findAndDeleteElement(id, color, tableauLocalStorage);
-      // Mise à jour de la page : ( soit actualiser la page (pas conseiller) / soit supprimer le closest)
+      // Mise à jour de la page 
       loadPage();
 
     });
@@ -130,17 +129,17 @@ function addListenerForQuantities(tableauLocalStorage) {
     element.addEventListener('change', function (event) {
       event.stopPropagation();
       event.preventDefault();
-      // referencer le parent du bouton delete pour pouvoir lire les dataset
+      // referencer le parent du qte 
       const closest = element.closest(".cart__item");
       console.log(closest);
 
-      // utiliser les dataset pour supprimer l'element du tableau localStorage 
+      // utiliser les dataset pour modfier la qte
       let id = closest.dataset.id;
       let color = closest.dataset.color;
       let newQty = parseInt(this.value);
       // Supprimer et Mettre à jour le localStorage
       findAndUpdateElement(id, color, newQty, tableauLocalStorage);
-      // Mise à jour de la page : ( soit actualiser la page (pas conseiller) / soit supprimer le closest)
+      // Mise à jour de la page 
       loadPage();
 
     });
@@ -152,13 +151,13 @@ function findAndUpdateElement(id, color, newQty, tableau) {
   for (let j in tableau) {
     if (tableau[j].color == color && tableau[j].id == id) {
       // le controle de la qte entre 1 et 100
-     let validQte=quantityControl(newQty);
-     if (validQte) {
-      tableau[j].quantity = newQty;
-      localStorage.setItem("panier", JSON.stringify(tableau));
-      break;
-    }
-    else alert("La quantité doit être entre 1 et 100");
+      let validQte = quantityControl(newQty);
+      if (validQte) {
+        tableau[j].quantity = newQty;
+        localStorage.setItem("panier", JSON.stringify(tableau));
+        break;
+      }
+      else alert("La quantité doit être entre 1 et 100");
     }
   }
 }
@@ -180,6 +179,7 @@ function validText(input, content, regex) {
 }
 
 let form = document.querySelector('.cart__order__form');
+//Controler les champs de formulaire
 form.firstName.addEventListener('change', function () {
   validText(this, 'Prénom', '^[A-Z][A-Za-z\é\è\ê\-]+$');
 });
@@ -216,7 +216,7 @@ btnCommander.addEventListener('click', function () {
 
     }
 
-    //  
+    //  Envoyer des données avec une requête POST
     fetch("http://localhost:3000/api/products/order", {
       method: "POST",
       headers: {
@@ -233,7 +233,7 @@ btnCommander.addEventListener('click', function () {
       })
       .then(function (value) {
         let orderID = value.orderId;
-        // vider le localstorage 
+        // Vider le localstorage 
         localStorage.removeItem("panier");
         document.location.href = "../html/confirmation.html?id=" + orderID;
       })
